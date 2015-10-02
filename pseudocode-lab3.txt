@@ -1,0 +1,28 @@
+;Port B 0-7, Port E 1-2 - LED Output (LED A-H, J-K)
+;Port F 0 - Player 2 Button Input
+;Port F 4 - Player 1 Button Input
+;Port D 1-2 - Player 2 DipSwitch Input (DipSwitch 1-2)
+;Port D 6-7 - Player 1 DipSwitch Input (DipSwitch 3-4)
+
+;Default State:  Loop of flashing lights E and F (flash at 2Hz)
+;Initial read of DIP Switch
+;Pulling PF (sampled every 5 ms)
+;;End loop upon both buttons being pressed - stored in a register, outputted to LED as solid light,
+;;	and anded with buttons being pulled.  Once both are zero (active-low), continue.
+;Random Timer
+;Check both player's score counters
+;If either player has a score that equals 4, (the other equals -4) flash current lights
+;Otherwise, calculate random timer - 2 ^ -min(d,4) * (320 - 80 * Sn)
+;Store in register 80 * Sn (from DIP Switch)
+;Store in register 320 - previous register
+;Store in register recursive loop 2 * itself (minimum of d and 4 times)
+;Store in register 1 / previous register
+;Store in random timer register previous register * previous previous previous register
+;Lights Split after random timer expires(Player 1 to the left, Player 2 to the right)
+;Wait for button press from Player 1 or Player 2 - read DIP switch
+;Start timer for specific button pressed - move in specific player's light
+;;If opposite player presses their button before timer expires, move light in,
+;;	increment d(drawn moves counter), back to random timer
+;;If timer expires prior to a response from opposite player, move first player's light in,
+;;	increment to first player's score counter, decrement the losing player's score counter,
+;;	reset d to zero, back to random timer
